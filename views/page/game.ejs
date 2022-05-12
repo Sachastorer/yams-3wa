@@ -3,6 +3,7 @@
 <h3>Bonjour <%= login %></h3>
 <div class="mb-5">
     <a href="/logout">Se déconnecter</a>
+    <a href="/results">Résultats</a>
 </div>
 <div>
     <a href="/play" class="btn btn-primary">Jouez</a>
@@ -23,9 +24,9 @@
     <% if(message && message === "gagne"){ %>
         <p>Patisseries gagnés:</p>
         <ul>
-            <!-- <% pastries.forEach(function(pastrie) { %>
+            <% pastries.forEach(function(pastrie) { %>
                 <li><%= pastrie %></li>
-            <% }); %>  -->
+            <% }); %> 
         </ul>
     <% } %>
 </div>

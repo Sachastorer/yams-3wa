@@ -49,11 +49,11 @@ const play = async (req, res) => {
             //vérification du token
     
             const nb = diceRoll()
-            // const nbPastries = getNbPastriesWon(nb)
-            const nbPastries = 1
+            const nbPastries = getNbPastriesWon(nb)
+            // const nbPastries = 1
     
     
-            res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: false})
+            // res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: false})
     
             const pastriesDisplayed = []
     
@@ -62,9 +62,9 @@ const play = async (req, res) => {
                 res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: "perdu", pastries: pastriesDisplayed})
             } else if(nbPastries === 1) {
     
-                pastrie = handlePastries()
-                pastriesDisplayed = pastriesDisplayed.push(pastrie)
-                console.log("ici")
+                let pastrie = await handlePastries()
+                pastriesDisplayed.push(pastrie)
+
                 res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: "gagne", pastries: pastriesDisplayed})
             }
         }
@@ -77,10 +77,10 @@ const play = async (req, res) => {
     // res.render("page/game", {nb: nb, login: tokenSigned.name})
 }
 
-const results = (req, res) => {
+const results = async (req, res) => {
 
-
-    res.status(200).render('page/results', {error: false})
+    const docs = await PastrieWonModel.find({}).exec()
+    res.status(200).render('page/results', {error: false, pastries: docs})
 }
 
 export { gamePage, results, play };

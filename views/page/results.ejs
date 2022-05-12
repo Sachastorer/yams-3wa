@@ -1,3 +1,9 @@
 <%- include('../partials/header') -%>
 <h2>Results</h2>
+<a href="/">Jouez</a>
+<ul>
+    <% pastries.forEach(function(pastrie) { %>
+        <li><%= pastrie.name %> : le <%= pastrie.created_at %></li>
+    <% }); %> 
+</ul>
 <%- include('../partials/footer') -%>
