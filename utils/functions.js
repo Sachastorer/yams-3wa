@@ -55,7 +55,7 @@ const handlePastries = async () => {
     // console.log(docs)
     const ind = Math.floor(Math.random()*(docs.length))
     
-    console.log(docs[ind]._id)
+    // console.log(docs[ind]._id)
 
     await PastrieModel.updateOne({_id: docs[ind]._id}, {$inc: { number: -1 }})
     const pastrieWon = new PastrieWonModel({name: docs[ind].name})

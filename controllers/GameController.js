@@ -39,7 +39,7 @@ const play = async (req, res) => {
     const token = req.session.token
     const tokenSigned = jwt.verify(token, secret)
 
-    console.log("played : " + tokenSigned.played)
+    // console.log("played : " + tokenSigned.played)
     await UserModel.findByIdAndUpdate(tokenSigned.userId ,{played: true})
 
 
@@ -97,7 +97,8 @@ const test = async (req, res) => {
             const nb = diceRoll()
             const nbPastries = getNbPastriesWon(nb)
             // const nbPastries = 3
-            console.log("Tirage : " + nb[0] + " " + nb[1] + " " + nb[2] + " " + nb[3] + " " + nb[4] + " " + nb[5])
+            console.log("Tirage : " + nb[0] + " " + nb[1] + " " + nb[2] + " " + nb[3] + " " + nb[4] )
+            console.log("Nombre de patisserie : " + nbPastries)
             const pastriesDisplayed = []
     
     
