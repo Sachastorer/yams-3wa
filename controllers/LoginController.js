@@ -15,7 +15,7 @@ const login = (req, res) => {
 
     const email = req.body.email
     const password = req.body.password
-    console.log(email)
+    // console.log(email)
 
     User.findOne({email: email})
     .then((doc) => {

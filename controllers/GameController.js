@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import { diceRoll, getNbPastriesWon, handlePastries } from "../utils/functions.js"
 import PastrieModel from "../models/Pastrie.js"
 import PastrieWonModel from "../models/PastrieWon.js"
+import UserModel from "../models/User.js"
 
 
 dotenv.config();
@@ -14,16 +15,17 @@ const gamePage = async (req, res) => {
     try {
         //vérification du token
 
-        const docs = await PastrieModel.find({number: {"$gte": 1}}).exec()
+        const docs = await PastrieModel.findOne({number: {"$gte": 1}}).exec()
         if(docs.length < 1) res.redirect("/results")
 
         const tokenSigned = jwt.verify(token, secret)
-        // console.log("played : " + tokenSigned.played)
+
+        const user = await UserModel.find({_id: tokenSigned.userId})
         
-        if(tokenSigned.played) {
-            res.redirect("/results")
+        if(user[0].played) {
+            res.status(200).render("page/game", {nb: false, login: tokenSigned.name, message: false, played: true})
         } else {
-            res.status(200).render("page/game", {nb: false, login: tokenSigned.name, message: false})
+            res.status(200).render("page/game", {nb: false, login: tokenSigned.name, message: false, played: false})
         }
         
     } catch (err) {
@@ -33,6 +35,53 @@ const gamePage = async (req, res) => {
 }
 
 const play = async (req, res) => {
+
+    const token = req.session.token
+    const tokenSigned = jwt.verify(token, secret)
+
+    console.log("played : " + tokenSigned.played)
+    await UserModel.findByIdAndUpdate(tokenSigned.userId ,{played: true})
+
+
+        
+    const docs = await PastrieModel.find({number: {"$gte": 1}}).exec()
+
+    if(tokenSigned.name) {
+
+        if(docs.length < 1) {
+            res.status(200).redirect("/results")
+        } else {
+    
+            const nb = diceRoll()
+            const nbPastries = getNbPastriesWon(nb)
+    
+            const pastriesDisplayed = []
+    
+    
+            if(nbPastries === 0) {
+                res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: "perdu", pastries: pastriesDisplayed, played: true})
+            } else {
+    
+                let pastrie 
+                for(let i = 0; i < nbPastries; i++) {
+                    pastrie = await handlePastries()
+                    pastriesDisplayed.push(pastrie)
+                }
+
+                res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: "gagne", pastries: pastriesDisplayed, played: true})
+            } 
+        }
+
+    } else {
+        req.session.token = '';
+        res.render("page/login", {error: "session"})
+    }
+
+        
+    // res.render("page/game", {nb: nb, login: tokenSigned.name})
+}
+
+const test = async (req, res) => {
 
     const token = req.session.token
     const tokenSigned = jwt.verify(token, secret)
@@ -52,7 +101,7 @@ const play = async (req, res) => {
     
     
             if(nbPastries === 0) {
-                res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: "perdu", pastries: pastriesDisplayed})
+                res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: "perdu", pastries: pastriesDisplayed, played: true})
             } else {
     
                 let pastrie 
@@ -61,7 +110,7 @@ const play = async (req, res) => {
                     pastriesDisplayed.push(pastrie)
                 }
 
-                res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: "gagne", pastries: pastriesDisplayed})
+                res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: "gagne", pastries: pastriesDisplayed, played: true})
             } 
         }
 
@@ -98,5 +147,5 @@ const reset = async (req, res) => {
     res.status(200).render('page/results', {error: false, pastries: [], login: tokenSigned.name})
 }
 
-export { gamePage, results, play, reset };
+export { gamePage, results, play, test, reset };
 

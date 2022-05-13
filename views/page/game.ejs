@@ -1,8 +1,22 @@
 <%- include('../partials/header') -%>
 <div class="container">
-    <h2>Jeu, bonjour <%= login %></h2>
+    <h3>Bonjour <%= login %></h3>
 
-    <a href="/play" class="btn btn-primary">Jouez</a>
+    <div class="d-flex">
+
+        <% if(played){ %>
+            <!-- <a href="/play" type="button" class="btn btn-primary" disabled>déja Jouez</a> -->
+            <form method="get" action="/play">
+                <button type="submit" class="btn btn-primary" disabled>Jouez</button>
+            </form>
+        <% } else{ %>  
+            <!-- <a href="/play" type="button" class="btn btn-primary">Jouez</a> -->
+            <form method="get" action="/play">
+                <button type="submit" class="btn btn-primary">Jouez</button>
+            </form>
+        <% } %>
+        <a href="/test" class="btn btn-primary">Test</a>
+    </div>
 
     <div class="d-flex">
         <div class="fw-bold m-3 px-3 py-2 border border-1 rounded"><%= nb.length > 0 ? nb[0] : "?" %></div>
