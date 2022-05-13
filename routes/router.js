@@ -6,10 +6,10 @@ import connected from "../middleware/connected.js"
 const router = express.Router()
 
 router.get("/", connected, gamePage)
-router.get("/results", connected, results)
+router.get("/results", results)
 router.get("/play", connected, play)
 router.get("/test", connected, test)
-router.get("/reset", connected, reset)
+router.get("/reset", reset)
 
 router.get("/login", loginPage)
 router.post("/login", login)

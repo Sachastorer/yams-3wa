@@ -25,7 +25,7 @@ const getNbPastriesWon = (nb) => {
         count[el] = (count[el] || 0) + 1
     });
 
-    // console.log(count)
+    // console.log(nb)
 
     let hasYams = false
     let hasSquare = false

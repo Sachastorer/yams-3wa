@@ -1,13 +1,16 @@
 <%- include('../partials/header') -%>
 <div class="container">
     <h3>Résultats</h3>
-    <a href="/reset">Reset</a>
-    <% if(pastries && pastries.length > 0){ %>
-    <ul>
-        <% pastries.forEach(function(pastrie) { %>
-            <li><%= pastrie.name %> : le <%= pastrie.created_at.toLocaleDateString("fr-FR"); %></li>
-        <% }); %> 
-    </ul>
-    <% } %>
+    <div class="w-50 m-auto">
+        <a href="/reset">Reset</a>
+
+        <% if(pastries && pastries.length > 0){ %>
+        <ul>
+            <% pastries.forEach(function(pastrie) { %>
+                <li><%= pastrie.created_at.toLocaleDateString("fr-FR", {hour: '2-digit', minute:'2-digit'}); %> : <%= pastrie.name %></li>
+            <% }); %> 
+        </ul>
+        <% } %>
+    </div>
 </div>
 <%- include('../partials/footer') -%>

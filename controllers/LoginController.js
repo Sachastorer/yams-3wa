@@ -37,7 +37,7 @@ const login = (req, res) => {
                 //2ème argument : la phrase secrète
                 secret,
                 {
-                    expiresIn: '2h'
+                    expiresIn: '1h'
                 }
             )
             // req.session.login = doc.name
@@ -51,7 +51,6 @@ const login = (req, res) => {
         res.render("page/login", {error: "email", login: false})
     })
 
-    // res.render("page/game")
 }
 
 const logout = (req, res) => {
