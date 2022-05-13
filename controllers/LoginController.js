@@ -7,7 +7,7 @@ const {APP_TOKEN: secret } = process.env;
 
 const loginPage = (req, res) => {
     // console.log(req.session)
-    res.render('page/login', {error: false})
+    res.render('page/login', {error: false, login: false})
 }
 
 const login = (req, res) => {
@@ -15,7 +15,7 @@ const login = (req, res) => {
 
     const email = req.body.email
     const password = req.body.password
-    // console.log(req.session)
+    console.log(email)
 
     User.findOne({email: email})
     .then((doc) => {
@@ -24,7 +24,7 @@ const login = (req, res) => {
         // console.log(doc.password)
         if( doc.password !== password) {
 
-            res.render("page/login", {error: "password"})
+            res.render("page/login", {error: "password", login: false})
         } else {
             const token = jwt.sign(
                 //1er argument : données du payload
@@ -48,7 +48,7 @@ const login = (req, res) => {
     })
     .catch((err) => {
         // console.log("err")
-        res.render("page/login", {error: "email"})
+        res.render("page/login", {error: "email", login: false})
     })
 
     // res.render("page/game")

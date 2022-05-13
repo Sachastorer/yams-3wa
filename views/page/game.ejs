@@ -1,11 +1,7 @@
 <%- include('../partials/header') -%>
-<h2>Game</h2>
-<h3>Bonjour <%= login %></h3>
-<div class="mb-5">
-    <a href="/logout">Se déconnecter</a>
-    <a href="/results">Résultats</a>
-</div>
-<div>
+<div class="container">
+    <h2>Jeu, bonjour <%= login %></h2>
+
     <a href="/play" class="btn btn-primary">Jouez</a>
 
     <div class="d-flex">
@@ -15,19 +11,20 @@
         <div class="fw-bold m-3 px-3 py-2 border border-1 rounded"><%= nb.length > 0 ? nb[3] : "?" %></div>
         <div class="fw-bold m-3 px-3 py-2 border border-1 rounded"><%= nb.length > 0 ? nb[4] : "?" %></div>
     </div>
+    <div>
+        <% if(message && message === "perdu"){ %>
+            <span>Perdu, vous ne remportez pas de patisserie</span><br>
+            <a href="/results">Voir les résultats</a>
+        <% } %>
+        <% if(message && message === "gagne"){ %>
+            <p>Patisseries gagnés:</p>
+            <ul>
+                <% pastries.forEach(function(pastrie) { %>
+                    <li><%= pastrie %></li>
+                <% }); %> 
+            </ul>
+        <% } %>
+    </div>
 </div>
-<div>
-    <% if(message && message === "perdu"){ %>
-        <span>Perdu, vous ne remportez pas de patisserie</span><br>
-        <a href="/results">Voir les résultats</a>
-    <% } %>
-    <% if(message && message === "gagne"){ %>
-        <p>Patisseries gagnés:</p>
-        <ul>
-            <% pastries.forEach(function(pastrie) { %>
-                <li><%= pastrie %></li>
-            <% }); %> 
-        </ul>
-    <% } %>
-</div>
+
 <%- include('../partials/footer') -%>

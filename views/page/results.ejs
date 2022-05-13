@@ -1,9 +1,13 @@
 <%- include('../partials/header') -%>
-<h2>Results</h2>
-<a href="/">Jouez</a>
-<ul>
-    <% pastries.forEach(function(pastrie) { %>
-        <li><%= pastrie.name %> : le <%= pastrie.created_at %></li>
-    <% }); %> 
-</ul>
+<div class="container">
+    <h2>Résultats</h2>
+    <a href="/reset">Reset</a>
+    <% if(pastries && pastries.length > 0){ %>
+    <ul>
+        <% pastries.forEach(function(pastrie) { %>
+            <li><%= pastrie.name %> : le <%= pastrie.created_at.toLocaleDateString("fr-FR"); %></li>
+        <% }); %> 
+    </ul>
+    <% } %>
+</div>
 <%- include('../partials/footer') -%>

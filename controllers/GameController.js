@@ -28,46 +28,43 @@ const gamePage = async (req, res) => {
         
     } catch (err) {
         req.session.token = '';
-        res.render("page/login", {error: "session"})
+        res.redirect("/login")
     }
 }
 
 const play = async (req, res) => {
 
     const token = req.session.token
-    
+    const tokenSigned = jwt.verify(token, secret)
         
     const docs = await PastrieModel.find({number: {"$gte": 1}}).exec()
-    const tokenSigned = jwt.verify(token, secret)
 
     if(tokenSigned.name) {
 
         if(docs.length < 1) {
             res.status(200).redirect("/results")
         } else {
-
-            //vérification du token
     
             const nb = diceRoll()
             const nbPastries = getNbPastriesWon(nb)
-            // const nbPastries = 1
-    
-    
-            // res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: false})
     
             const pastriesDisplayed = []
     
     
             if(nbPastries === 0) {
                 res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: "perdu", pastries: pastriesDisplayed})
-            } else if(nbPastries === 1) {
+            } else {
     
-                let pastrie = await handlePastries()
-                pastriesDisplayed.push(pastrie)
+                let pastrie 
+                for(let i = 0; i < nbPastries; i++) {
+                    pastrie = await handlePastries()
+                    pastriesDisplayed.push(pastrie)
+                }
 
                 res.status(200).render("page/game", {nb: nb, login: tokenSigned.name, message: "gagne", pastries: pastriesDisplayed})
-            }
+            } 
         }
+
     } else {
         req.session.token = '';
         res.render("page/login", {error: "session"})
@@ -79,9 +76,27 @@ const play = async (req, res) => {
 
 const results = async (req, res) => {
 
+    const token = req.session.token
+    const tokenSigned = jwt.verify(token, secret)
+
     const docs = await PastrieWonModel.find({}).exec()
-    res.status(200).render('page/results', {error: false, pastries: docs})
+    res.status(200).render('page/results', {error: false, pastries: docs, login: tokenSigned.name})
 }
 
-export { gamePage, results, play };
+const reset = async (req, res) => {
+
+    const token = req.session.token
+    const tokenSigned = jwt.verify(token, secret)
+    
+    const docs = await PastrieWonModel.find({}).exec()
+
+    if(docs.length>0) {
+
+        await PastrieWonModel.collection.drop();
+        await PastrieModel.updateMany({ "number": { $ne: 10 } }, {"$set":{"number": 10}}).exec()
+    }
+    res.status(200).render('page/results', {error: false, pastries: [], login: tokenSigned.name})
+}
+
+export { gamePage, results, play, reset };
 
